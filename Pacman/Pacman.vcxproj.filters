@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Assets">
+      <UniqueIdentifier>9aa965e4-a7b0-4cd5-a658-79350e438a65</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dds;dlg;fbx;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{a4a02475-98b7-4ef8-9cd6-668a304fce47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader manager">
+      <UniqueIdentifier>{aea15955-1a29-4082-bdf5-18fb73805b38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader manager\Shaders hlsl">
+      <UniqueIdentifier>{91034b01-312f-4ae1-b58f-446d6a59c772}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader manager\Shaders sources">
+      <UniqueIdentifier>{621058b7-d6f6-42ef-8b4f-82d3be63ceef}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sources\Camera.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Dots.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Game.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Global.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\pch.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\StepTimer.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\World.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Character.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ShaderManager\IShader.h">
+      <Filter>Shader manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ShaderManager\ShaderManager.h">
+      <Filter>Shader manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ShaderManager\Common.h">
+      <Filter>Shader manager\Shaders hlsl</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ShaderManager\GS_General.h">
+      <Filter>Shader manager\Shaders sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ShaderManager\PS_General.h">
+      <Filter>Shader manager\Shaders sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ShaderManager\VS_Indexed.h">
+      <Filter>Shader manager\Shaders sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ShaderManager\VS_Instanced.h">
+      <Filter>Shader manager\Shaders sources</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\Ghost.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\Caption.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ShaderManager\PS_OneCB.h">
+      <Filter>Shader manager\Shaders sources</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sources\Camera.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Dots.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Game.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Main.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\pch.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\World.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Character.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ShaderManager\ShaderManager.cpp">
+      <Filter>Shader manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ShaderManager\GS_General.cpp">
+      <Filter>Shader manager\Shaders sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ShaderManager\PS_General.cpp">
+      <Filter>Shader manager\Shaders sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ShaderManager\VS_Indexed.cpp">
+      <Filter>Shader manager\Shaders sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ShaderManager\VS_Instanced.cpp">
+      <Filter>Shader manager\Shaders sources</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\Ghost.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\Caption.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ShaderManager\PS_OneCB.cpp">
+      <Filter>Shader manager\Shaders sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\directx.ico">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Resources\dot.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Resources\pacman.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Resources\ghosts.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="resources\caption.png">
+      <Filter>Assets</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resources\resource.rc">
+      <Filter>Assets</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="Resources\settings.manifest">
+      <Filter>Assets</Filter>
+    </Manifest>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Sources\ShaderManager\GS_Billboard.hlsl">
+      <Filter>Shader manager\Shaders hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="Sources\ShaderManager\PS_Color.hlsl">
+      <Filter>Shader manager\Shaders hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="Sources\ShaderManager\PS_Phong.hlsl">
+      <Filter>Shader manager\Shaders hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="Sources\ShaderManager\PS_Texture.hlsl">
+      <Filter>Shader manager\Shaders hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="Sources\ShaderManager\VS_Instanced.hlsl">
+      <Filter>Shader manager\Shaders hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="Sources\ShaderManager\VS_Indexed.hlsl">
+      <Filter>Shader manager\Shaders hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="sources\shaderManager\PS_UI.hlsl">
+      <Filter>Shader manager\Shaders hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="sources\shaderManager\VS_UI.hlsl">
+      <Filter>Shader manager\Shaders hlsl</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>
