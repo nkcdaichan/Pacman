@@ -36,4 +36,4 @@ struct GS_Output
   float2 texCoord : TexCoord;
 };
 
-#endif // _COMMON_H_
+#endif  //_COMMON_H_
