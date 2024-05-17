@@ -1,2 +1,10 @@
-﻿  GS_General.cpp
+﻿  Game.cpp
+  Main.cpp
+  GS_General.cpp
+  PS_General.cpp
+  PS_OneCB.cpp
+  ShaderManager.cpp
+  VS_Indexed.cpp
+  VS_Instanced.cpp
+  コードを生成中...
   Pacman.vcxproj -> C:\Users\user\Downloads\Pac-Man-master\Pac-Man-master\bin\Pacman.exe
