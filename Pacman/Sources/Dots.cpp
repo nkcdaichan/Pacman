@@ -72,7 +72,7 @@ void Dots::Init(ID3D11Device1* device)
 {
   DX::ThrowIfFailed(CreateWICTextureFromFile(device, nullptr, L"Resources/dot.png", m_resource.GetAddressOf(), m_shaderResourceView.GetAddressOf()));
 
-  m_vertices.push_back({{0, 0, 0}, {0.0, 1.0, 0.0}, {0.8, 0.0, 0.0}});
+  m_vertices.push_back({ {0, 0, 0}, {0.0, 1.0, 0.0}, {0.8, 0.0, 0.0} });
 
   // Vertex buffer
   D3D11_BUFFER_DESC bd = {};
