@@ -41,7 +41,8 @@
 #include <exception>
 #include <memory>
 #include <stdexcept>
-
+#include <sstream>
+#include <comdef.h> // _com_error
 namespace DX
 {
   inline void ThrowIfFailed(HRESULT hr)
