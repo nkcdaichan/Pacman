@@ -16,31 +16,31 @@ namespace
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
-// Indicates to hybrid graphics systems to prefer the discrete part by default
+//ハイブリッドグラフィックスシステムにディスクリートパートを優先するよう指示
 extern "C"
 {
   __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
   __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 }
 
-// Entry point
+//エントリーポイント
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
   UNREFERENCED_PARAMETER(hPrevInstance);
   UNREFERENCED_PARAMETER(lpCmdLine);
-
+  //CPUサポートの確認
   if (!XMVerifyCPUSupport())
     return 1;
-
+  //COMの初期化
   HRESULT hr = CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);
   if (FAILED(hr))
     return 1;
-
+  //ゲームオブジェクトの作成
   g_game = std::make_unique<Game>();
 
-  // Register class and create window
+  //クラスの登録とウィンドウの作成
   {
-    // Register class
+	//クラスの登録
     WNDCLASSEX wcex = {};
     wcex.cbSize = sizeof(WNDCLASSEX);
     wcex.style = CS_HREDRAW | CS_VREDRAW;
@@ -54,7 +54,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
     if (!RegisterClassEx(&wcex))
       return 1;
 
-    // Create window
+	//ウィンドウの作成
     uint16_t w, h;
     g_game->GetDefaultSize(w, h);
 
@@ -70,7 +70,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
       return 1;
 
     ShowWindow(hwnd, nCmdShow);
-    // Change nCmdShow to SW_SHOWMAXIMIZED to default to fullscreen.
+	//デフォルトをフルスクリーンにするにはnCmdShowをSW_SHOWMAXIMIZED に変更する
 
     SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(g_game.get()));
 
@@ -79,7 +79,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
     g_game->Initialize(hwnd, static_cast<uint16_t>(rc.right - rc.left), static_cast<uint16_t>(rc.bottom - rc.top));
   }
 
-  // Main message loop
+  //メインメッセージループ
   MSG msg = {};
   while (WM_QUIT != msg.message)
   {
@@ -101,7 +101,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
   return static_cast<int>(msg.wParam);
 }
 
-// Windows procedure
+//Windowsプロシージャ
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
   PAINTSTRUCT ps;
@@ -153,10 +153,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     break;
 
   case WM_ENTERSIZEMOVE:
+	//サイズ変更が開始されたことを記録
     s_in_sizemove = true;
     break;
 
   case WM_EXITSIZEMOVE:
+	//サイズ変更が終了したことを記録し,ゲームにウィンドウサイズの変更を通知
     s_in_sizemove = false;
     if (game)
     {
@@ -168,6 +170,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     break;
 
   case WM_GETMINMAXINFO:
+   //ウィンドウの最小トラックサイズを設定
   {
     auto info = reinterpret_cast<MINMAXINFO*>(lParam);
     info->ptMinTrackSize.x = 320;
@@ -176,6 +179,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
   break;
 
   case WM_ACTIVATEAPP:
+	//アプリケーションのアクティブ状態が変更されたときの処理
     if (game)
     {
       if (wParam)
@@ -193,13 +197,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
   case WM_KEYDOWN:
   case WM_KEYUP:
   case WM_SYSKEYUP:
+	//キーボード入力の処理
     Keyboard::ProcessMessage(message, wParam, lParam);
     break;
 
   case WM_POWERBROADCAST:
+	//電源の状態変更に関する処理
     switch (wParam)
     {
     case PBT_APMQUERYSUSPEND:
+	  //シスペンド状態への移行前に行う処理
       if (!s_in_suspend && game)
         game->OnSuspending();
       s_in_suspend = true;
@@ -217,15 +224,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     break;
 
   case WM_DESTROY:
+	//ウィンドウが破棄されたときの処理
     PostQuitMessage(0);
     break;
 
   case WM_SYSKEYDOWN:
+	//システムキーが押されたときの処理
     if (wParam == VK_RETURN && (lParam & 0x60000000) == 0x20000000)
     {
-      // Implements the classic ALT+ENTER fullscreen toggle
+      //ALT+ENTERフルスクリーン切り替えの実装
       if (s_fullscreen)
       {
+		//ウィンドウモードに切り替え
         SetWindowLongPtr(hWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW);
         SetWindowLongPtr(hWnd, GWL_EXSTYLE, 0);
 
@@ -255,16 +265,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     break;
 
   case WM_MENUCHAR:
-    // A menu is active and the user presses a key that does not correspond
-    // to any mnemonic or accelerator key. Ignore so we don't produce an error beep.
+	  //メニューがアクティブで,ユーザーがモニックやアクセラレータキーに対応しないキーを押した場合に,
+	  //エラービープを発生させないように無視する。
     return MAKELRESULT(0, MNC_CLOSE);
   }
-
+  //デフォルトのウィンドウプロシージャにメッセージを渡す
   return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
-// Exit helper
+//終了補助関数
 void ExitGame()
 {
+  //メッセージキューに終了メッセージを送信
   PostQuitMessage(0);
 }

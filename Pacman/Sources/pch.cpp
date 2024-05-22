@@ -1,6 +1,6 @@
 //
-// pch.cpp
-// Include the standard header and generate the precompiled header.
+//pch.cpp
+//標準ヘッダーを含め、プリコンパイル済みヘッダーを生成
 //
 
 #include "pch.h"

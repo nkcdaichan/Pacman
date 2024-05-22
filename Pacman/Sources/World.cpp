@@ -4,7 +4,7 @@
 #include "World.h"
 
 using namespace DirectX;
-
+//コンストラクタ
 World::World() :
   m_map{
     {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
@@ -29,9 +29,9 @@ World::World() :
     {0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
     {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0}}
 {
-  XMStoreFloat4x4(&m_worldMatrix, DirectX::XMMatrixIdentity()); // No need to transpose identity matrix
+  XMStoreFloat4x4(&m_worldMatrix, DirectX::XMMatrixIdentity()); //単位行列を転置する必要はない
 }
-
+//デストラクタ
 World::~World()
 {
 }
@@ -49,7 +49,7 @@ void World::AddBlock(float x, float z, float depth, bool north, bool west, bool 
     m_indices.push_back(lastIndex + 3);
   };
 
-  // Top side
+  //上面
   m_vertices.push_back({{x   , 0.5, z}         , {0.0, 1.0, 0.0}, {0.8, 0.0, 0.0}, {0, 0} });
   m_vertices.push_back({{x    , 0.5, z + depth}, {0.0, 1.0, 0.0}, {0.8, 0.0, 0.0}, {0, 0} });
   m_vertices.push_back({{x + 1, 0.5, z + depth}, {0.0, 1.0, 0.0}, {0.8, 0.0, 0.0}, {0, 0} });
@@ -57,7 +57,7 @@ void World::AddBlock(float x, float z, float depth, bool north, bool west, bool 
 
   AddIndces();
 
-  // 2st side
+  //2番目の側面
   if (west)
   {
     m_vertices.push_back({{x    , 0.0, z    }, {-1.0, 0.0, 0.0}, {0.2, 0.0, 0.8}, {0, 0} });
@@ -68,7 +68,7 @@ void World::AddBlock(float x, float z, float depth, bool north, bool west, bool 
     AddIndces();
   }
 
-  // 3rd side
+  //3番目の側面
   if (north)
   {
     m_vertices.push_back({{x    , 0.0, z + depth}, {0.0, 0.0, 1.0}, {0.2, 0.0, 0.8}, {0, 0} });
@@ -79,7 +79,7 @@ void World::AddBlock(float x, float z, float depth, bool north, bool west, bool 
     AddIndces();
   }
 
-  // 4th side
+  //4番目の側面
   if (east)
   {
     m_vertices.push_back({{x + 1, 0.0, z + depth}, {1.0, 0.0, 0.0}, {0.2, 0.0, 0.8}, {0, 0} });
@@ -90,7 +90,7 @@ void World::AddBlock(float x, float z, float depth, bool north, bool west, bool 
     AddIndces();
   }
 
-  // 5st side
+  //5番目の側面
   if (south)
   {
     m_vertices.push_back({{x + 1, 0.0, z    }, {0.0, 0.0, -1.0}, {0.2, 0.0, 0.8}, {0, 0} });
@@ -104,23 +104,28 @@ void World::AddBlock(float x, float z, float depth, bool north, bool west, bool 
 
 void World::Generate(ID3D11Device1* device)
 {
+  //ワールドを生成する関数
   for (uint8_t z = 0; z != Global::worldSize; z++)
     for (uint8_t x = 0; x != Global::worldSize; x++)
+	  //地面がある場合
       if (m_map[z][x] == 1)
       {
+		//各方向のブロックの有無を判定
         bool north = m_map[std::min(z + 1, 21)][x] == 1 ? false : true;
         bool south = m_map[std::max(z - 1, 0)][x] == 1 ? false : true;
         bool east = m_map[z][std::min(x + 1, 21)] == 1 ? false : true;
         bool west = m_map[z][std::max(x - 1, 0)] == 1 ? false : true;
-
+		//ブロックを追加
         AddBlock(x, z, 1.0f, north, west, south, east);
       }
+      //障害物がある場合
       else if (m_map[z][x] == 3)
       {
+		//障害物のブロックを追加
         AddBlock(x, z + 0.4f, 0.2f, true, false, true, false);
       }
 
-  // Vertex buffer
+  //頂点バッファの作成
   D3D11_BUFFER_DESC bd = {};
   bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
   bd.Usage = D3D11_USAGE_DEFAULT;
@@ -133,7 +138,7 @@ void World::Generate(ID3D11Device1* device)
   sd.pSysMem = m_vertices.data();
   DX::ThrowIfFailed(device->CreateBuffer(&bd, &sd, &m_vertexBuffer));
 
-  // Index buffer
+  //インデックスバッファの作成
   D3D11_BUFFER_DESC ibd = {};
   ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
   ibd.Usage = D3D11_USAGE_DEFAULT;
@@ -149,8 +154,10 @@ void World::Generate(ID3D11Device1* device)
 
 void World::Init(ID3D11Device1* device)
 {
+  //ワールドの初期化
   Generate(device);
 
+  //ラスタライザステートの設定
   D3D11_RASTERIZER_DESC cmdesc = {};
   cmdesc.FillMode = D3D11_FILL_SOLID;
   cmdesc.CullMode = D3D11_CULL_BACK;
@@ -161,7 +168,8 @@ void World::Init(ID3D11Device1* device)
 
 void World::Draw(ID3D11DeviceContext1* context)
 {
-  // Bind vertex buffer and index buffer
+  //描画関数
+  //頂点バッファとインデックスバッファのバインド
   const UINT stride = sizeof(Global::Vertex);
   const UINT offset = 0;
 
@@ -169,13 +177,15 @@ void World::Draw(ID3D11DeviceContext1* context)
   context->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
   context->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
 
+  //ラスタライザステートの設定
   context->RSSetState(m_cullCW.Get());
-
+  //描画
   context->DrawIndexed((UINT)m_indices.size(), 0, 0);
 }
 
 bool World::IsPassable(uint8_t column, uint8_t row, bool canGoHome)
 {
+  //通行可能かどうかを判定
   if (canGoHome && (m_map[row][column] == 0 || m_map[row][column] == 3))
     return true;
   else

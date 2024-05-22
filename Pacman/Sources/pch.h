@@ -1,6 +1,6 @@
 //
-// pch.h
-// Header for standard system include files.
+//pch.h
+//標準システムインクルードファイルのヘッダー
 //
 
 #pragma once
@@ -9,21 +9,21 @@
 #define _WIN32_WINNT 0x0601
 #include <SDKDDKVer.h>
 
-// Use the C++ standard templated min/max
+//C++標準のテンプレート化されたmin/maxを使用
 #define NOMINMAX
 
-// DirectX apps don't need GDI
+//DirectXアプリにはGDIは不要
 #define NODRAWTEXT
 #define NOGDI
 #define NOBITMAP
 
-// Include <mcx.h> if you need this
+//<mcx.h>を含める
 #define NOMCX
 
-// Include <winsvc.h> if you need this
+//<winsvc.h>を含める
 #define NOSERVICE
 
-// WinHelp is deprecated
+
 #define NOHELP
 
 #define WIN32_LEAN_AND_MEAN
@@ -47,7 +47,7 @@ namespace DX
   {
     if (FAILED(hr))
     {
-      // Set a breakpoint on this line to catch DirectX API errors
+	  //この行にブレークポイントを設定してDirectX APIエラーをキャッチする
       throw std::exception();
     }
   }

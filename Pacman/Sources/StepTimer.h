@@ -1,6 +1,4 @@
-//
-// StepTimer.h - A simple timer that provides elapsed time information
-//
+
 
 #pragma once
 
@@ -10,7 +8,7 @@
 
 namespace DX
 {
-  // Helper class for animation and simulation timing.
+  //アニメーションやシミュレーションのタイミングのためのヘルパークラス
   class StepTimer
   {
   public:
@@ -35,40 +33,40 @@ namespace DX
         throw std::exception("QueryPerformanceCounter");
       }
 
-      // Initialize max delta to 1/10 of a second.
+	  //最大デルタを1/10秒に初期化
       m_qpcMaxDelta = static_cast<uint64_t>(m_qpcFrequency.QuadPart / 10);
     }
 
-    // Get elapsed time since the previous Update call.
+	//直前のUpdate呼び出しからの経過時間を取得
     uint64_t GetElapsedTicks() const { return m_elapsedTicks; }
     double GetElapsedSeconds() const { return TicksToSeconds(m_elapsedTicks); }
 
-    // Get total time since the start of the program.
+	//プログラム開始からの合計時間を取得
     uint64_t GetTotalTicks() const { return m_totalTicks; }
     double GetTotalSeconds() const { return TicksToSeconds(m_totalTicks); }
 
-    // Get total number of updates since start of the program.
+	//プログラム開始からの合計更新回数を取得
     uint32_t GetFrameCount() const { return m_frameCount; }
 
-    // Get the current framerate.
+	//現在のフレームレートを取得
     uint32_t GetFramesPerSecond() const { return m_framesPerSecond; }
 
-    // Set whether to use fixed or variable timestep mode.
+	//固定または可変のタイムステップモードを使用するかどうかを設定
     void SetFixedTimeStep(bool isFixedTimestep) { m_isFixedTimeStep = isFixedTimestep; }
 
-    // Set how often to call Update when in fixed timestep mode.
+	//固定タイムステップモードでのUpdateの呼び出し頻度を設定
     void SetTargetElapsedTicks(uint64_t targetElapsed) { m_targetElapsedTicks = targetElapsed; }
     void SetTargetElapsedSeconds(double targetElapsed) { m_targetElapsedTicks = SecondsToTicks(targetElapsed); }
 
-    // Integer format represents time using 10,000,000 ticks per second.
+	//整数形式は1秒あたり10000000ティックを使用して時間を表す
     static const uint64_t TicksPerSecond = 10000000;
 
     static double TicksToSeconds(uint64_t ticks) { return static_cast<double>(ticks) / TicksPerSecond; }
     static uint64_t SecondsToTicks(double seconds) { return static_cast<uint64_t>(seconds * TicksPerSecond); }
 
-    // After an intentional timing discontinuity (for instance a blocking IO operation)
-    // call this to avoid having the fixed timestep logic attempt a set of catch-up 
-    // Update calls.
+	//故意のタイミングの不連続性（たとえばブロッキングIO操作）の後に、
+	//固定タイムステップロジックがキャッチアップのUpdate呼び出しを試みないようにするために
+	//これを呼び出す
 
     void ResetElapsedTime()
     {
@@ -83,11 +81,11 @@ namespace DX
       m_qpcSecondCounter = 0;
     }
 
-    // Update timer state, calling the specified Update function the appropriate number of times.
+	//タイマーの状態を更新し,指定されたUpdate関数を適切な回数呼び出す
     template<typename TUpdate>
     void Tick(const TUpdate& update)
     {
-      // Query the current time.
+	  //現在の時刻をクエリする
       LARGE_INTEGER currentTime;
 
       if (!QueryPerformanceCounter(&currentTime))
@@ -100,13 +98,13 @@ namespace DX
       m_qpcLastTime = currentTime;
       m_qpcSecondCounter += timeDelta;
 
-      // Clamp excessively large time deltas (e.g. after paused in the debugger).
+	  //過剰に大きな時間差をクランプ(デバッガーで一時停止した後など)
       if (timeDelta > m_qpcMaxDelta)
       {
         timeDelta = m_qpcMaxDelta;
       }
 
-      // Convert QPC units into a canonical tick format. This cannot overflow due to the previous clamp.
+	  //QPCユニットを標準的なティック形式に変換 これは前のクランプのためにオーバーフローすることはない
       timeDelta *= TicksPerSecond;
       timeDelta /= m_qpcFrequency.QuadPart;
 
@@ -114,14 +112,13 @@ namespace DX
 
       if (m_isFixedTimeStep)
       {
-        // Fixed timestep update logic
+		  //固定タイムステップの更新ロジック
 
-        // If the app is running very close to the target elapsed time (within 1/4 of a millisecond) just clamp
-        // the clock to exactly match the target value. This prevents tiny and irrelevant errors
-        // from accumulating over time. Without this clamping, a game that requested a 60 fps
-        // fixed update, running with vsync enabled on a 59.94 NTSC display, would eventually
-        // accumulate enough tiny errors that it would drop a frame. It is better to just round
-        // small deviations down to zero to leave things running smoothly.
+		  //アプリが目標の経過時間と非常に近い間隔で実行されている場合（1/4ミリ秒以内）、クロックを
+		  //目標値と完全に一致するようにクランプする。これにより、小さな無視できないエラーが
+		  //時間とともに蓄積されるのを防ぐ。このクランプを行わないと、60 fpsの固定更新を要求した
+		  //ゲームが、59.94 NTSCディスプレイで垂直同期が有効な状態で実行される場合、
+		  //最終的に十分に小さいエラーが蓄積し、フレームが落ちてしまう。
 
         if (static_cast<uint64_t>(std::abs(static_cast<int64_t>(timeDelta - m_targetElapsedTicks))) < TicksPerSecond / 4000)
         {
@@ -142,7 +139,7 @@ namespace DX
       }
       else
       {
-        // Variable timestep update logic.
+		//可変タイムステップの更新ロジック
         m_elapsedTicks = timeDelta;
         m_totalTicks += timeDelta;
         m_leftOverTicks = 0;
@@ -151,7 +148,7 @@ namespace DX
         update();
       }
 
-      // Track the current framerate.
+	  //現在のフレームレートを追跡
       if (m_frameCount != lastFrameCount)
       {
         m_framesThisSecond++;
@@ -166,23 +163,23 @@ namespace DX
     }
 
   private:
-    // Source timing data uses QPC units.
+	//ソースのタイミングデータはQPCユニットを使用
     LARGE_INTEGER m_qpcFrequency;
     LARGE_INTEGER m_qpcLastTime;
     uint64_t m_qpcMaxDelta;
 
-    // Derived timing data uses a canonical tick format.
+	//派生したタイミングデータは標準的なティック形式を使用
     uint64_t m_elapsedTicks;
     uint64_t m_totalTicks;
     uint64_t m_leftOverTicks;
 
-    // Members for tracking the framerate.
+	//フレームレートを追跡するためのメンバー
     uint32_t m_frameCount;
     uint32_t m_framesPerSecond;
     uint32_t m_framesThisSecond;
     uint64_t m_qpcSecondCounter;
 
-    // Members for configuring fixed timestep mode.
+	//固定タイムステップモードを構成するためのメンバー
     bool m_isFixedTimeStep;
     uint64_t m_targetElapsedTicks;
   };
