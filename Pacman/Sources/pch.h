@@ -23,7 +23,6 @@
 //<winsvc.h>‚ðŠÜ‚ß‚é
 #define NOSERVICE
 
-
 #define NOHELP
 
 #define WIN32_LEAN_AND_MEAN
